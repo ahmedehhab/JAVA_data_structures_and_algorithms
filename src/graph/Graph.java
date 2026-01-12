@@ -1,5 +1,6 @@
 package graph;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Graph {
@@ -74,4 +75,32 @@ public class Graph {
         Collections.reverse(topological);
          return  topological;
     }
+    public  boolean detectCycle(){
+        int start[]=new int [this.V];
+        int finish[]=new int [this.V];
+        int timer[]={0};
+        Arrays.fill(start,-1);
+        Arrays.fill(finish,-1);
+        for(int i=0;i<this.V;i++){
+          if(hasCycle(i,timer,start,finish)) {
+           return  true;
+          }
+        }
+         return  false;
+    }
+   private   boolean hasCycle(int node,int timer[],int start[],int finish[]) {
+           start[node]=timer[0]++;
+           for(int i:adj[node]){
+               if(start[i]==-1){
+                   if(hasCycle(i,timer,start,finish)) {
+                       return  true;
+                   }
+               }else if(finish[i]==-1){
+                   return true;
+               }
+           }
+           finish[node]=timer[0]++;
+  return  false;
+    }
+
 }

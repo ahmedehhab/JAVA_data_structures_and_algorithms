@@ -26,7 +26,7 @@ public class Main {
         System.out.println("Connected Components (Should be 3): " + islands.numberOfConnectedComponenets());
         System.out.println();
 
-        // --- TEST CASE 3: Directed Dependency Graph ---
+        // --- TEST CASE 3: Directed DAG (No Cycle) ---
         System.out.println("--- Test Case 3: Directed DAG ---");
         // Structure: 5 -> 2 -> 3, 5 -> 0, 4 -> 0, 4 -> 1
         Graph dag = new Graph(6, true);
@@ -37,13 +37,47 @@ public class Main {
         dag.addNode(2, 3);
         dag.addNode(3, 1);
 
-        System.out.println("Topological Sorting Order:");
+        System.out.print("Topological Sorting Order: ");
         ArrayList<Integer> result = dag.topologicalSorting();
         if (result != null) {
             for (int node : result) {
                 System.out.print(node + " ");
             }
+        } else {
+            System.out.print("Cycle detected (Null)");
         }
-        System.out.println("\n(One valid order: 5 4 2 3 1 0)");
+        System.out.println("\nHas Cycle? (Should be false): " + dag.detectCycle());
+        System.out.println();
+
+        // --- TEST CASE 4: Simple Directed Cycle ---
+        System.out.println("--- Test Case 4: Directed Cycle (0 -> 1 -> 2 -> 0) ---");
+        Graph cyclic = new Graph(3, true);
+        cyclic.addNode(0, 1);
+        cyclic.addNode(1, 2);
+        cyclic.addNode(2, 0);
+
+        System.out.println("Has Cycle? (Should be true): " + cyclic.detectCycle());
+        System.out.println();
+
+        // --- TEST CASE 5: Complex Graph with 1 Cycle ---
+        System.out.println("--- Test Case 5: Large Graph with one hidden cycle ---");
+        Graph complex = new Graph(5, true);
+        complex.addNode(0, 1);
+        complex.addNode(1, 2);
+        complex.addNode(2, 3);
+        complex.addNode(0, 4);
+        complex.addNode(3, 1); // Cycle: 1 -> 2 -> 3 -> 1
+
+        System.out.println("Has Cycle? (Should be true): " + complex.detectCycle());
+        System.out.println();
+
+        // --- TEST CASE 6: Disconnected Cycle ---
+        System.out.println("--- Test Case 6: Disconnected Cycle ---");
+        Graph disconnectedCycle = new Graph(4, true);
+        disconnectedCycle.addNode(0, 1); // Component 1 (No cycle)
+        disconnectedCycle.addNode(2, 3); // Component 2 (Cycle start)
+        disconnectedCycle.addNode(3, 2); // Component 2 (Cycle end)
+
+        System.out.println("Has Cycle? (Should be true): " + disconnectedCycle.detectCycle());
     }
 }
